@@ -1,0 +1,21 @@
+[
+  {
+    "title": "@@datalist.jsontotableformatter.config@@",
+    "properties": [
+      {
+        "name" : "parameters",
+        "label" : "@@datalist.jsontotableformatter.editjsonfield@@",
+        "type" : "gridCombine",
+        "columns" : [
+          {
+            "key" : "jsonField",
+            "label" : "@@datalist.jsontotableformatter.jsonfield@@"},
+          {
+            "key" : "label",
+            "label" : "@@datalist.jsontotableformatter.label@@"
+          }
+        ]
+      }
+    ]
+  }
+]
