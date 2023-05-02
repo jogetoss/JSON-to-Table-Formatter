@@ -6,9 +6,11 @@ import org.joget.apps.datalist.model.DataListColumn;
 import org.joget.apps.datalist.model.DataListColumnFormatDefault;
 
 import java.util.HashMap;
+import org.joget.apps.app.service.AppPluginUtil;
 
-public class JsonTableFormatter extends DataListColumnFormatDefault {
-
+public class JSONTableFormatter extends DataListColumnFormatDefault {
+    private static final String MESSAGE_PATH = "messages/JSONToTableFormatter";
+    
     @Override
     public String format(DataList dataList, DataListColumn column, Object row, Object value) {
         String jsonField = getPropertyString("jsonField");
@@ -30,7 +32,7 @@ public class JsonTableFormatter extends DataListColumnFormatDefault {
 
     @Override
     public String getName() {
-        return "Json to Table Formatter2";
+        return AppPluginUtil.getMessage("datalist.JSONToTableFormatter.name", getClassName(), MESSAGE_PATH);
     }
 
     @Override
@@ -40,12 +42,12 @@ public class JsonTableFormatter extends DataListColumnFormatDefault {
 
     @Override
     public String getDescription() {
-        return "To format json format into table format";
+        return AppPluginUtil.getMessage("datalist.JSONToTableFormatter.desc", getClassName(), MESSAGE_PATH);
     }
 
     @Override
     public String getLabel() {
-        return "Json to Table Formatter2";
+        return AppPluginUtil.getMessage("datalist.JSONToTableFormatter.name", getClassName(), MESSAGE_PATH);
     }
 
     @Override
@@ -55,7 +57,7 @@ public class JsonTableFormatter extends DataListColumnFormatDefault {
 
     @Override
     public String getPropertyOptions() {
-        return AppUtil.readPluginResource(getClass().getName(), "/properties/JsonToTableFormatter.json", null, true, "message/JsonToTableFormatter");
+        return AppUtil.readPluginResource(getClass().getName(), "/properties/JSONToTableFormatter.json", null, true, MESSAGE_PATH);
     }
 
 }

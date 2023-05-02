@@ -4,7 +4,7 @@
     <groupId>org.joget.marketplace</groupId>
     <artifactId>json-to-table-formatter</artifactId>
     <packaging>bundle</packaging>
-    <version>7.0-SNAPSHOT</version>
+    <version>7.0.0</version>
     <name>json-to-table-formatter</name>
     <url>http://www.joget.org</url>
     <build>

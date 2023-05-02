@@ -1,18 +1,18 @@
 [
   {
-    "title": "@@datalist.jsontotableformatter.config@@",
+    "title": "@@datalist.JSONToTableFormatter.config@@",
     "properties": [
       {
         "name" : "parameters",
-        "label" : "@@datalist.jsontotableformatter.editjsonfield@@",
+        "label" : "@@datalist.JSONToTableFormatter.editJSONField@@",
         "type" : "gridCombine",
         "columns" : [
           {
             "key" : "jsonField",
-            "label" : "@@datalist.jsontotableformatter.jsonfield@@"},
+            "label" : "@@datalist.JSONToTableFormatter.JSONField@@"},
           {
             "key" : "label",
-            "label" : "@@datalist.jsontotableformatter.label@@"
+            "label" : "@@datalist.JSONToTableFormatter.label@@"
           }
         ]
       }

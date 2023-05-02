@@ -15,7 +15,7 @@ public class Activator implements BundleActivator {
 
         //Register plugin here
         //registrationList.add(context.registerService(MyPlugin.class.getName(), new MyPlugin(), null));
-        registrationList.add(context.registerService(JsonTableFormatter.class.getName(), new JsonTableFormatter(), null));
+        registrationList.add(context.registerService(JSONTableFormatter.class.getName(), new JSONTableFormatter(), null));
 
     }
 
