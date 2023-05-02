@@ -5,15 +5,21 @@
       {
         "name" : "parameters",
         "label" : "@@datalist.JSONToTableFormatter.editJSONField@@",
-        "type" : "gridCombine",
-        "columns" : [
-          {
-            "key" : "jsonField",
-            "label" : "@@datalist.JSONToTableFormatter.JSONField@@"},
-          {
-            "key" : "label",
-            "label" : "@@datalist.JSONToTableFormatter.label@@"
-          }
+        "type" : "grid",
+        "columns":[
+            {
+                "key" : "jsonField",
+                "label" : "@@datalist.JSONToTableFormatter.JSONField@@"
+            },
+            {
+                "key" : "label",
+                "label" : "@@datalist.JSONToTableFormatter.label@@"
+            },
+            {
+                "key": "hideColumn",
+                "label":"@@datalist.JSONToTableFormatter.hideColumn@@",
+                "type": "truefalse"
+            }
         ]
       }
     ]

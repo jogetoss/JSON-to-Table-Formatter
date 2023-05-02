@@ -5,20 +5,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class HtmlTable {
     private HtmlTable() {
     }
 
-    public static String fromJson(String json, HashMap columnLabel) throws JSONException {
+    public static String fromJson(String json, HashMap<String, Map> mappings) throws JSONException {
         if (json == null || json.isEmpty()) throw new RuntimeException("Json can't be null or empty!");
         if (json.trim().startsWith("{")) {
             JSONObject jsonObject = new JSONObject(json);
-            return convertToHtmlTable(fromObject(jsonObject), columnLabel);
+            return convertToHtmlTable(fromObject(jsonObject), mappings);
         } else if (json.trim().startsWith("[")) {
             JSONArray jsonArray = new JSONArray(json);
-            return convertToHtmlTable(jsonArray, columnLabel);
+            return convertToHtmlTable(jsonArray, mappings);
         }
         throw new RuntimeException("Provided value doesn't seem to be a json formatted string!");
     }
@@ -29,13 +30,13 @@ public class HtmlTable {
         return jsonArray;
     }
 
-    private static String convertToHtmlTable(JSONArray jsonArray, HashMap columnLabel) throws JSONException {
+    private static String convertToHtmlTable(JSONArray jsonArray, HashMap<String, Map> mappings) throws JSONException {
         if (jsonArray.isEmpty()) return "";
         Object item = jsonArray.get(0);
         if (!(item instanceof JSONObject) && !(item instanceof JSONArray))
             return item.toString();
         if (item instanceof JSONArray)
-            return convertToHtmlTable((JSONArray) item, columnLabel);
+            return convertToHtmlTable((JSONArray) item, mappings);
 
         Set<String> keys = jsonArray.getJSONObject(0).keySet();
         StringBuilder html = new StringBuilder();
@@ -44,8 +45,10 @@ public class HtmlTable {
         // HEAD
         html.append("<tr style=\"background-color: #4CAF50; color: white;padding-top: 5px; padding-bottom: 5px;\">");
         keys.forEach(key -> {
-            if(columnLabel.containsKey(key)){
-                html.append("<th style=\"text-align: left;\">").append(columnLabel.get(key).toString()).append("</th>");
+            if(mappings.containsKey(key)){
+                if(mappings.get(key).get("hideColumn").toString().equalsIgnoreCase("false")){
+                    html.append("<th style=\"text-align: left;\">").append(mappings.get(key).get("label").toString()).append("</th>");
+                }
             } else {
                 html.append("<th style=\"text-align: left;\">").append(key).append("</th>");
             }
@@ -58,15 +61,24 @@ public class HtmlTable {
             JSONObject obj = jsonArray.getJSONObject(i);
             html.append("<tr>");
             keys.forEach(key -> {
+                
+                if(mappings.containsKey(key)){
+                    if(mappings.get(key).get("hideColumn").toString().equalsIgnoreCase("true")){
+                        return;
+                    }
+                }
+                
                 Object value = obj.get(key);
                 String toAppend;
                 if (value instanceof JSONArray) {
-                    toAppend = convertToHtmlTable((JSONArray) value, columnLabel);
+                    toAppend = convertToHtmlTable((JSONArray) value, mappings);
                 } else if (value instanceof JSONObject) {
-                    toAppend = convertToHtmlTable(fromObject((JSONObject) value), columnLabel);
-                } else
+                    toAppend = convertToHtmlTable(fromObject((JSONObject) value), mappings);
+                } else {
                     toAppend = value.toString();
+                }
                 html.append("<td>").append(toAppend).append("</td>");
+                
             });
             html.append("</tr>");
         }

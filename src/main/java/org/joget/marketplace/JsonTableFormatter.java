@@ -1,11 +1,12 @@
 package org.joget.marketplace;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.joget.apps.app.service.AppUtil;
 import org.joget.apps.datalist.model.DataList;
 import org.joget.apps.datalist.model.DataListColumn;
 import org.joget.apps.datalist.model.DataListColumnFormatDefault;
 
-import java.util.HashMap;
 import org.joget.apps.app.service.AppPluginUtil;
 
 public class JSONTableFormatter extends DataListColumnFormatDefault {
@@ -13,19 +14,22 @@ public class JSONTableFormatter extends DataListColumnFormatDefault {
     
     @Override
     public String format(DataList dataList, DataListColumn column, Object row, Object value) {
-        String jsonField = getPropertyString("jsonField");
-        String label = getPropertyString("label");
-        HashMap<String, String> columnLabel= new HashMap<String, String>();
-        String[] keys = jsonField.split(";");
-        String[] values = label.split(";");
-
-        for(int x=0;x<keys.length;x++) {
-            columnLabel.put(keys[x],values[x]);
+        Object[] parameters = null;
+        if (getProperty("parameters") instanceof Object[]){
+            parameters = (Object[]) getProperty("parameters");
+        }
+        
+        HashMap<String, Map> mappings = new HashMap<String, Map>();
+        for (Object obj : parameters) {
+            Map mapping = (HashMap) obj;
+            String jsonField = (String) mapping.get("jsonField");
+            mappings.put(jsonField, mapping );
         }
 
+                
         String colVal = (String) value;
         if (colVal != null && !colVal.isEmpty()) {
-            value = HtmlTable.fromJson(colVal,columnLabel);
+            value = HtmlTable.fromJson(colVal, mappings);
         }
         return (String) value;
     }
