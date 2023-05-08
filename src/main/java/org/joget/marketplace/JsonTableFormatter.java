@@ -1,6 +1,7 @@
 package org.joget.marketplace;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import org.joget.apps.app.service.AppUtil;
 import org.joget.apps.datalist.model.DataList;
@@ -19,7 +20,7 @@ public class JSONTableFormatter extends DataListColumnFormatDefault {
             parameters = (Object[]) getProperty("parameters");
         }
         
-        HashMap<String, Map> mappings = new HashMap<String, Map>();
+        LinkedHashMap<String, Map> mappings = new LinkedHashMap<String, Map>();
         for (Object obj : parameters) {
             Map mapping = (HashMap) obj;
             String jsonField = (String) mapping.get("jsonField");

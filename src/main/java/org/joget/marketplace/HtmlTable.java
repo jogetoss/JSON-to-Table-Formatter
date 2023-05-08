@@ -4,7 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,7 +12,7 @@ public class HtmlTable {
     private HtmlTable() {
     }
 
-    public static String fromJson(String json, HashMap<String, Map> mappings) throws JSONException {
+    public static String fromJson(String json, LinkedHashMap<String, Map> mappings) throws JSONException {
         if (json == null || json.isEmpty()) throw new RuntimeException("Json can't be null or empty!");
         if (json.trim().startsWith("{")) {
             JSONObject jsonObject = new JSONObject(json);
@@ -30,7 +30,7 @@ public class HtmlTable {
         return jsonArray;
     }
 
-    private static String convertToHtmlTable(JSONArray jsonArray, HashMap<String, Map> mappings) throws JSONException {
+    private static String convertToHtmlTable(JSONArray jsonArray, LinkedHashMap<String, Map> mappings) throws JSONException {
         if (jsonArray.isEmpty()) return "";
         Object item = jsonArray.get(0);
         if (!(item instanceof JSONObject) && !(item instanceof JSONArray))
@@ -44,41 +44,43 @@ public class HtmlTable {
 
         // HEAD
         html.append("<tr style=\"background-color: #4CAF50; color: white;padding-top: 5px; padding-bottom: 5px;\">");
-        keys.forEach(key -> {
-            if(mappings.containsKey(key)){
-                if(mappings.get(key).get("hideColumn").toString().equalsIgnoreCase("false")){
-                    html.append("<th style=\"text-align: left;\">").append(mappings.get(key).get("label").toString()).append("</th>");
+        mappings.keySet().forEach(mapKey -> {
+            keys.forEach(key -> {
+                if (key.equals(mapKey)) {
+                    if (mappings.get(mapKey).get("hideColumn").toString().equalsIgnoreCase("false")) {
+                        html.append("<th style=\"text-align: left;\">").append(mappings.get(mapKey).get("label").toString()).append("</th>");
+                    } else {
+                       return;
+                    }
                 }
-            } else {
-                html.append("<th style=\"text-align: left;\">").append(key).append("</th>");
-            }
+            });
         });
         html.append("</tr>");
 
         // BODY
         html.append("<tbody>");
+
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject obj = jsonArray.getJSONObject(i);
             html.append("<tr>");
-            keys.forEach(key -> {
-                
-                if(mappings.containsKey(key)){
-                    if(mappings.get(key).get("hideColumn").toString().equalsIgnoreCase("true")){
-                        return;
+            mappings.keySet().forEach(mapKey -> {
+                keys.forEach(key -> {
+                    if (key.equals(mapKey)) {
+                        if (mappings.get(mapKey).get("hideColumn").toString().equalsIgnoreCase("true")) {
+                            return;
+                        }
+                        Object value = obj.get(mapKey);
+                        String toAppend;
+                        if (value instanceof JSONArray) {
+                            toAppend = convertToHtmlTable((JSONArray) value, mappings);
+                        } else if (value instanceof JSONObject) {
+                            toAppend = convertToHtmlTable(fromObject((JSONObject) value), mappings);
+                        } else {
+                            toAppend = value.toString();
+                        }
+                        html.append("<td>").append(toAppend).append("</td>");
                     }
-                }
-                
-                Object value = obj.get(key);
-                String toAppend;
-                if (value instanceof JSONArray) {
-                    toAppend = convertToHtmlTable((JSONArray) value, mappings);
-                } else if (value instanceof JSONObject) {
-                    toAppend = convertToHtmlTable(fromObject((JSONObject) value), mappings);
-                } else {
-                    toAppend = value.toString();
-                }
-                html.append("<td>").append(toAppend).append("</td>");
-                
+                });
             });
             html.append("</tr>");
         }
