@@ -1,5 +1,6 @@
 package org.joget.marketplace;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -15,6 +16,17 @@ public class JSONTableFormatter extends DataListColumnFormatDefault {
     
     @Override
     public String format(DataList dataList, DataListColumn column, Object row, Object value) {
+        String showUnmapped = getPropertyString("showUnmapped");
+        String headerFontColor = getPropertyString("headerFontColor");
+        String headerBgColor = getPropertyString("headerBgColor");
+        String tableInlineStyle = getPropertyString("tableInlineStyle");
+        ArrayList<String> tableConfig = new ArrayList<String>();
+        
+        tableConfig.add(showUnmapped);
+        tableConfig.add(headerFontColor);
+        tableConfig.add(headerBgColor);
+        tableConfig.add(tableInlineStyle);
+
         Object[] parameters = null;
         if (getProperty("parameters") instanceof Object[]){
             parameters = (Object[]) getProperty("parameters");
@@ -30,7 +42,7 @@ public class JSONTableFormatter extends DataListColumnFormatDefault {
                 
         String colVal = (String) value;
         if (colVal != null && !colVal.isEmpty()) {
-            value = HtmlTable.fromJson(colVal, mappings);
+            value = HtmlTable.fromJson(colVal, mappings, tableConfig);
         }
         return (String) value;
     }
