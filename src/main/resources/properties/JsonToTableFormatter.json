@@ -2,24 +2,16 @@
   {
     "title": "@@datalist.JSONToTableFormatter.config@@",
     "properties": [ 
-      {
-        "name" : "showUnmapped",
-        "label" : "@@datalist.JSONToTableFormatter.showUnmapped@@",
-        "type" : "checkbox",
-        "options" : [{
-          "label" : "",
-          "value" : "true"
-      }]
-      },
+     
       {
         "name" : "headerFontColor",
         "label" : "@@datalist.JSONToTableFormatter.headerFontColor@@",
-        "type" : "textfield"
+        "type" : "color"
       },
       {
         "name" : "headerBgColor",
         "label" : "@@datalist.JSONToTableFormatter.headerBgColor@@",
-        "type" : "textfield"
+        "type" : "color"
       },
       {
         "name" : "tableInlineStyle",
@@ -49,6 +41,15 @@
                 "type": "truefalse"
             }
         ]
+      },
+      {
+        "name" : "showUnmappedFields",
+        "label" : "@@datalist.JSONToTableFormatter.showUnmappedFields@@",
+        "type" : "checkbox",
+        "options" : [{
+          "label" : "",
+          "value" : "true"
+        }]
       }
     ]
   }

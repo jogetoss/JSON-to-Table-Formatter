@@ -16,7 +16,7 @@ public class JSONTableFormatter extends DataListColumnFormatDefault {
     
     @Override
     public String format(DataList dataList, DataListColumn column, Object row, Object value) {
-        String showUnmapped = getPropertyString("showUnmapped");
+        String showUnmapped = getPropertyString("showUnmappedFields");
         String headerFontColor = getPropertyString("headerFontColor");
         String headerBgColor = getPropertyString("headerBgColor");
         String tableInlineStyle = getPropertyString("tableInlineStyle");
