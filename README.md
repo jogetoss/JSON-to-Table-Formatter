@@ -1,6 +1,6 @@
 # Description
 
-This repository is meant to serve as a general template for how to set up new repositories in the JogetOSS organization. 
+This list formatter plugin turns JSON data into a formatted table.
 
 # Getting Help
 
