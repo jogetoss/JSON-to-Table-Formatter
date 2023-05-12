@@ -1,15 +1,19 @@
 package org.joget.marketplace;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
+
 import org.joget.apps.app.service.AppUtil;
 import org.joget.apps.datalist.model.DataList;
 import org.joget.apps.datalist.model.DataListColumn;
 import org.joget.apps.datalist.model.DataListColumnFormatDefault;
 
 import org.joget.apps.app.service.AppPluginUtil;
+import org.joget.commons.util.LogUtil;
 
 public class JSONTableFormatter extends DataListColumnFormatDefault {
     private static final String MESSAGE_PATH = "messages/JSONToTableFormatter";
@@ -54,7 +58,13 @@ public class JSONTableFormatter extends DataListColumnFormatDefault {
 
     @Override
     public String getVersion() {
-        return "7.0.0";
+        final Properties projectProp = new Properties();
+        try {
+            projectProp.load(this.getClass().getClassLoader().getResourceAsStream("project.properties"));
+        } catch (IOException ex) {
+            LogUtil.error(getClass().getName(), ex, "Unable to get project version from project properties...");
+        }
+        return projectProp.getProperty("version");
     }
 
     @Override
