@@ -90,14 +90,10 @@ public class HtmlTable {
                         if (mappings.get(key).get("hideColumn").toString().equalsIgnoreCase("true")) {
                             return;
                         }
-                        if(mappings.get(key).get("columnInlineStyle") != null){
-                            html.append("<th style=\"" + mappings.get(key).get("columnInlineStyle").toString() + "\">").append(mappings.get(key).get("label").toString()).append("</th>");
-                        } else {
-                            html.append("<th>").append(mappings.get(key).get("label").toString()).append("</th>");
-                        }
+                        html.append("<th>").append(mappings.get(key).get("label").toString()).append("</th>");
                     } else {
                         if (tableConfig.get(0).toString().equalsIgnoreCase("true")) {
-                            html.append("<th style=\"text-align: left;\">").append(key).append("</th>");
+                            html.append("<th>").append(key).append("</th>");
                         }
                     }
                 }
@@ -108,7 +104,7 @@ public class HtmlTable {
             columnHeaders.removeAll(sortedColumnHeaders);
             columnHeaders.forEach(key -> {
                 sortedColumnHeaders.add(key);
-                html.append("<th style=\"text-align: left;\">").append(key).append("</th>");
+                html.append("<th>").append(key).append("</th>");
             });
         }
 
