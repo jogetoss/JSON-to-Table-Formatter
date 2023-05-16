@@ -2,7 +2,7 @@
 
 This list formatter plugin turns JSON data into a formatted table.
 
-![sample](https://github.com/jogetoss/json-to-table-formatter/assets/70784722/9c3c3783-3dfe-4a4e-9d3c-588cf3262c82)
+![screenshot](https://github.com/jogetoss/json-to-table-formatter/assets/70784722/eb5b626c-e64c-438e-bd4d-43762f8145b4)
 
 
 # Getting Help
