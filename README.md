@@ -2,6 +2,9 @@
 
 This list formatter plugin turns JSON data into a formatted table.
 
+![sample](https://github.com/jogetoss/json-to-table-formatter/assets/70784722/9c3c3783-3dfe-4a4e-9d3c-588cf3262c82)
+
+
 # Getting Help
 
 JogetOSS is a community-led team for open source software related to the [Joget](https://www.joget.org) no-code/low-code application platform.
