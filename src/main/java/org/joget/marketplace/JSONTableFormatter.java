@@ -46,7 +46,7 @@ public class JSONTableFormatter extends DataListColumnFormatDefault {
             mappings.put(jsonField, mapping );
         }
 
-
+                
         String colVal = (String) value;
         if (colVal != null && !colVal.isEmpty()) {
             value = HtmlTable.fromJson(colVal, mappings, tableConfig);

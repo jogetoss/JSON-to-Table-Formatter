@@ -2,7 +2,7 @@
   {
     "title": "@@datalist.JSONToTableFormatter.config@@",
     "properties": [
-      
+    
       {
         "name" : "headerFontColor",
         "label" : "@@datalist.JSONToTableFormatter.headerFontColor@@",
@@ -23,23 +23,23 @@
         "label" : "@@datalist.JSONToTableFormatter.editJSONField@@",
         "type" : "grid",
         "columns":[
-          {
-            "key" : "jsonField",
-            "label" : "@@datalist.JSONToTableFormatter.JSONField@@"
-          },
-          {
-            "key" : "label",
-            "label" : "@@datalist.JSONToTableFormatter.label@@"
-          },
-          {
-            "key" : "columnInlineStyle",
-            "label" : "@@datalist.JSONToTableFormatter.columnInlineStyle@@"
-          },
-          {
-            "key": "hideColumn",
-            "label":"@@datalist.JSONToTableFormatter.hideColumn@@",
-            "type": "truefalse"
-          }
+            {
+                "key" : "jsonField",
+                "label" : "@@datalist.JSONToTableFormatter.JSONField@@"
+            },
+            {
+                "key" : "label",
+                "label" : "@@datalist.JSONToTableFormatter.label@@"
+            },
+            {
+                "key" : "columnInlineStyle",
+                "label" : "@@datalist.JSONToTableFormatter.columnInlineStyle@@"
+            },
+            {
+                "key": "hideColumn",
+                "label":"@@datalist.JSONToTableFormatter.hideColumn@@",
+                "type": "truefalse"
+            }
         ]
       },
       {
