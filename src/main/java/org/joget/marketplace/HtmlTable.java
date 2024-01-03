@@ -136,14 +136,14 @@ public class HtmlTable {
                         value = "";
                     }
 
-                    String toAppend;
-                    if (value instanceof JSONArray) {
-                        toAppend = convertToHtmlTable((JSONArray) value, mappings, tableConfig);
-                    } else if (value instanceof JSONObject) {
-                        toAppend = convertToHtmlTable(fromObject((JSONObject) value), mappings, tableConfig);
-                    } else {
-                        toAppend = value.toString();
-                    }
+                String toAppend;
+                if (value instanceof JSONArray) {
+                    toAppend = convertToHtmlTable((JSONArray) value, mappings, tableConfig);
+                } else if (value instanceof JSONObject) {
+                    toAppend = convertToHtmlTable(fromObject((JSONObject) value), mappings, tableConfig);
+                } else {
+                    toAppend = value.toString();
+                }
 
                     if (mappings.containsKey(key)) {
                         if (mappings.get(key).get("hideColumn").toString().equalsIgnoreCase("true")) {
