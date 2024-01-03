@@ -17,25 +17,28 @@ import org.joget.commons.util.LogUtil;
 
 public class JSONTableFormatter extends DataListColumnFormatDefault {
     private static final String MESSAGE_PATH = "messages/JSONToTableFormatter";
-    
+
     @Override
     public String format(DataList dataList, DataListColumn column, Object row, Object value) {
         String showUnmapped = getPropertyString("showUnmappedFields");
         String headerFontColor = getPropertyString("headerFontColor");
         String headerBgColor = getPropertyString("headerBgColor");
         String tableInlineStyle = getPropertyString("tableInlineStyle");
+        String transpose = getPropertyString("transpose");
+
         ArrayList<String> tableConfig = new ArrayList<String>();
-        
+
         tableConfig.add(showUnmapped);
         tableConfig.add(headerFontColor);
         tableConfig.add(headerBgColor);
         tableConfig.add(tableInlineStyle);
+        tableConfig.add(transpose);
 
         Object[] parameters = null;
         if (getProperty("parameters") instanceof Object[]){
             parameters = (Object[]) getProperty("parameters");
         }
-        
+
         LinkedHashMap<String, Map> mappings = new LinkedHashMap<String, Map>();
         for (Object obj : parameters) {
             Map mapping = (HashMap) obj;
@@ -43,7 +46,7 @@ public class JSONTableFormatter extends DataListColumnFormatDefault {
             mappings.put(jsonField, mapping );
         }
 
-                
+
         String colVal = (String) value;
         if (colVal != null && !colVal.isEmpty()) {
             value = HtmlTable.fromJson(colVal, mappings, tableConfig);

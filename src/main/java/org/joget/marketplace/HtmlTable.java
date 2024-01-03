@@ -49,12 +49,20 @@ public class HtmlTable {
             html.append("<table>");
         }
 
-        // HEAD
-        ArrayList<String> columnHeaders = generateTableHeader(jsonArray, tableConfig, mappings, html);
+        if(tableConfig.get(4).equalsIgnoreCase("true")) {
+        // Transpose logic  
+        JSONArray transposed = transposeJsonArray(jsonArray);
+        
+        // Pass transposed array to generateTableHeader and generateTableBody
+        ArrayList<String> columnHeaders = generateTableHeader(transposed, tableConfig, mappings, html); 
+        generateTableBody(transposed, tableConfig, mappings, html, columnHeaders);
 
-        // BODY
-        generateTableBody(jsonArray, tableConfig, mappings, html, columnHeaders);
-       
+        } else {
+        // Normal table generation
+        ArrayList<String> columnHeaders = generateTableHeader(jsonArray, tableConfig, mappings, html);
+        generateTableBody(jsonArray, tableConfig, mappings, html, columnHeaders);  
+        }
+
         html.append("</table>");
         return html.toString();
     }
@@ -80,7 +88,7 @@ public class HtmlTable {
                 }
             }
         }
-   
+
         ArrayList<String> sortedColumnHeaders = new ArrayList<String>();
         mappings.keySet().forEach(mapKey -> {
             columnHeaders.forEach(key -> {
@@ -114,42 +122,138 @@ public class HtmlTable {
 
     private static void generateTableBody( JSONArray jsonArray, ArrayList<String> tableConfig, LinkedHashMap<String, Map> mappings, StringBuilder html, ArrayList<String> columnHeaders) throws JSONException {
         html.append("<tbody>");
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject obj = jsonArray.getJSONObject(i);
-            html.append("<tr>");
 
-            columnHeaders.forEach(key -> {
-                Object value = new Object();
-                try {
-                    value = obj.get(key);
-                } catch (Exception e) {
-                    value = "";
-                }
+        if (tableConfig.get(4).equalsIgnoreCase("true")) {
+                for (int i = 1; i < jsonArray.length(); i++) {
+                JSONObject obj = jsonArray.getJSONObject(i);
+                html.append("<tr>");
 
-                String toAppend;
-                if (value instanceof JSONArray) {
-                    toAppend = convertToHtmlTable((JSONArray) value, mappings, tableConfig);
-                } else if (value instanceof JSONObject) {
-                    toAppend = convertToHtmlTable(fromObject((JSONObject) value), mappings, tableConfig);
-                } else {
-                    toAppend = value.toString();
-                }
-
-                if (mappings.containsKey(key)) {
-                    if (mappings.get(key).get("hideColumn").toString().equalsIgnoreCase("true")) {
-                        return;
+                columnHeaders.forEach(key -> {
+                    Object value = new Object();
+                    try {
+                        value = obj.get(key);
+                    } catch (Exception e) {
+                        value = "";
                     }
-                    if(mappings.get(key).get("columnInlineStyle") != null){
-                        html.append("<td style=\"" + mappings.get(key).get("columnInlineStyle").toString() + "\">").append(toAppend).append("</td>");
+
+                    if (value instanceof JSONArray || value instanceof JSONObject) {
+                        
+                    }
+
+                    String toAppend;
+                    if (value instanceof JSONArray) {
+                        toAppend = convertToHtmlTable((JSONArray) value, mappings, tableConfig);
+                    } else if (value instanceof JSONObject) {
+                        toAppend = convertToHtmlTable(fromObject((JSONObject) value), mappings, tableConfig);
+                    } else {
+                        toAppend = value.toString();
+                    }
+
+                    if (mappings.containsKey(key)) {
+                        if (mappings.get(key).get("hideColumn").toString().equalsIgnoreCase("true")) {
+                            return;
+                        }
+                        if(mappings.get(key).get("columnInlineStyle") != null){
+                            html.append("<td style=\"" + mappings.get(key).get("columnInlineStyle").toString() + "\">").append(toAppend).append("</td>");
+                        } else {
+                            html.append("<td>").append(toAppend).append("</td>");
+                        }
                     } else {
                         html.append("<td>").append(toAppend).append("</td>");
                     }
-                } else {
-                    html.append("<td>").append(toAppend).append("</td>");
-                }
-            });
-            html.append("</tr>");
-        }
+                });
+                html.append("</tr>");
+            }
+        } else
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject obj = jsonArray.getJSONObject(i);
+                html.append("<tr>");
+
+                columnHeaders.forEach(key -> {
+                    Object value = new Object();
+                    try {
+                        value = obj.get(key);
+                    } catch (Exception e) {
+                        value = "";
+                    }
+
+                    String toAppend;
+                    if (value instanceof JSONArray) {
+                        toAppend = convertToHtmlTable((JSONArray) value, mappings, tableConfig);
+                    } else if (value instanceof JSONObject) {
+                        toAppend = convertToHtmlTable(fromObject((JSONObject) value), mappings, tableConfig);
+                    } else {
+                        toAppend = value.toString();
+                    }
+
+                    if (mappings.containsKey(key)) {
+                        if (mappings.get(key).get("hideColumn").toString().equalsIgnoreCase("true")) {
+                            return;
+                        }
+                        if(mappings.get(key).get("columnInlineStyle") != null){
+                            html.append("<td style=\"" + mappings.get(key).get("columnInlineStyle").toString() + "\">").append(toAppend).append("</td>");
+                        } else {
+                            html.append("<td>").append(toAppend).append("</td>");
+                        }
+                    } else {
+                        html.append("<td>").append(toAppend).append("</td>");
+                    }
+                });
+                html.append("</tr>");
+            }
         html.append("</tbody>");
     }
+
+    public static JSONArray transposeJsonArray(JSONArray jsonArray) throws JSONException {
+
+        // Get column headers 
+        ArrayList<String> columnHeaders = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject row = jsonArray.getJSONObject(i);
+            for (String key : row.keySet()) {
+            if (!columnHeaders.contains(key)) {
+                columnHeaders.add(key);
+            }
+            }
+        }
+        // Get the first object to extract keys for headers
+            JSONObject first = jsonArray.getJSONObject(0);
+            JSONArray headers = new JSONArray();
+            String headerKey = first.keys().next();
+            for (String key : first.keySet()) {
+                headers.put(key);
+            }
+
+        // Initialize transposed array
+        JSONArray transposedArray = new JSONArray();
+
+        // Loop through column headers
+        for (String columnHeader : columnHeaders) {
+
+            // New row for each column header
+            LinkedHashMap<String, String> newRow = new LinkedHashMap<>();
+
+            // Loop through each row to get value for current column
+            for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject row = jsonArray.getJSONObject(i);
+            String header = row.getString(headerKey);
+            String cellValue = "";
+            if (row.has(columnHeader)) {
+                cellValue = row.get(columnHeader).toString();
+            }
+            newRow.put(header, cellValue);
+            newRow.put(headers.get(0).toString(), columnHeader);
+            // newRow.put("row " + i, cellValue);
+            
+            }
+
+            JSONObject jsonRow = new JSONObject(newRow);
+            // Add new row to transposed array
+            transposedArray.put(jsonRow); 
+            
+        }
+
+        return transposedArray;
+    }
+
 }
