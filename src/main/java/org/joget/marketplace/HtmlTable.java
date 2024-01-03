@@ -136,10 +136,6 @@ public class HtmlTable {
                         value = "";
                     }
 
-                    if (value instanceof JSONArray || value instanceof JSONObject) {
-                        
-                    }
-
                     String toAppend;
                     if (value instanceof JSONArray) {
                         toAppend = convertToHtmlTable((JSONArray) value, mappings, tableConfig);
