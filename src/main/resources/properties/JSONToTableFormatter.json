@@ -1,8 +1,8 @@
 [
   {
     "title": "@@datalist.JSONToTableFormatter.config@@",
-    "properties": [
-    
+    "properties": [ 
+     
       {
         "name" : "headerFontColor",
         "label" : "@@datalist.JSONToTableFormatter.headerFontColor@@",
@@ -47,9 +47,9 @@
         "label" : "@@datalist.JSONToTableFormatter.showUnmappedFields@@",
         "type" : "checkbox",
         "options" : [{
-            "label" : "",
-            "value" : "true"
-          }]
+          "label" : "",
+          "value" : "true"
+        }]
       },
       {
         "name": "transpose",

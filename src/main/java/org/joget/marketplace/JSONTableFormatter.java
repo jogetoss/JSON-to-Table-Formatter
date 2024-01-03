@@ -38,7 +38,7 @@ public class JSONTableFormatter extends DataListColumnFormatDefault {
         if (getProperty("parameters") instanceof Object[]){
             parameters = (Object[]) getProperty("parameters");
         }
-
+        
         LinkedHashMap<String, Map> mappings = new LinkedHashMap<String, Map>();
         for (Object obj : parameters) {
             Map mapping = (HashMap) obj;
@@ -46,7 +46,7 @@ public class JSONTableFormatter extends DataListColumnFormatDefault {
             mappings.put(jsonField, mapping );
         }
 
-                
+
         String colVal = (String) value;
         if (colVal != null && !colVal.isEmpty()) {
             value = HtmlTable.fromJson(colVal, mappings, tableConfig);
