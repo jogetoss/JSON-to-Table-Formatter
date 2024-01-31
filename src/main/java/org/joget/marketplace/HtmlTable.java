@@ -134,9 +134,25 @@ public class HtmlTable {
                         value = "";
                     }
 
-                    String toAppend;
+                    String toAppend = "";
                     if (value instanceof JSONArray) {
-                        toAppend = convertToHtmlTable((JSONArray) value, mappings, tableConfig);
+                        JSONArray array = (JSONArray) value;
+                        StringBuilder arrayString = new StringBuilder();
+
+                        for (int j = 0; j < array.length(); j++) {
+                            Object arrayElement = array.get(j);
+                            if (arrayElement instanceof JSONArray || arrayElement instanceof JSONObject) {
+                                arrayString.append(convertToHtmlTable(fromObject(
+                                        (JSONObject) arrayElement), mappings, tableConfig));
+                            } else {
+                                arrayString.append(arrayElement.toString());
+                            }
+                            if (j < array.length() - 1) {
+                                arrayString.append(", ");
+                            }
+                        }
+
+                        toAppend = arrayString.toString();
                     } else if (value instanceof JSONObject) {
                         toAppend = convertToHtmlTable(fromObject((JSONObject) value), mappings, tableConfig);
                     } else {
@@ -238,7 +254,6 @@ public class HtmlTable {
             // Get the first object to extract keys for headers
             JSONObject first = jsonArray.getJSONObject(0);
             JSONArray headers = new JSONArray();
-            String headerKey = first.keys().next();
             for (String key : first.keySet()) {
                 headers.put(key);
             }
@@ -290,11 +305,21 @@ public class HtmlTable {
                 // Loop through each row to get value for current column
                 for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject row = jsonArray.getJSONObject(i);
-                String valueIndex = row.getString(headerKey);
+                String valueIndex = "" + i;
                 String cellValue = "";
-                if (row.has(rowHeader)) {
-                    cellValue = row.get(rowHeader).toString();
+
+                Object item = row.get(rowHeader);
+
+                if (item instanceof JSONArray) {
+                    cellValue = convertToHtmlTable((JSONArray) item, mappings, tableConfig);
+                } else if (item instanceof JSONObject) {
+                    cellValue = convertToHtmlTable(fromObject((JSONObject) item), mappings, tableConfig);
+                } else {
+                    if (row.has(rowHeader)) {
+                        cellValue = item.toString();
+                    }
                 }
+
                 // Row headers
                 newRow.put(headers.toString(), rowLabel);
                 // Cell values
