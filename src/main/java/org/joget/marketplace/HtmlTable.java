@@ -39,12 +39,14 @@ public class HtmlTable {
 
     private static String convertToHtmlTable(JSONArray jsonArray, LinkedHashMap<String, Map> mappings, ArrayList<String> tableConfig) throws JSONException {
         Boolean isTransposed = tableConfig.get(4).equalsIgnoreCase("true");
+        Boolean noHeader = false;
         if (jsonArray.isEmpty()) {
             return "";
         }
         Object item = jsonArray.get(0);
+        // if item is not {key:value} and not [{key:value}], e.g: [1,2,3]
         if (!(item instanceof JSONObject) && !(item instanceof JSONArray)) {
-            return item.toString();
+            noHeader = true;
         }
         if (item instanceof JSONArray) {
             return convertToHtmlTable((JSONArray) item, mappings, tableConfig);
@@ -57,17 +59,21 @@ public class HtmlTable {
             html.append("<table>");
         }
 
-        if (isTransposed) {
-            // Transpose logic  
-            LinkedHashMap<String, LinkedHashMap<String, String>> transposed = transposeJsonArray(jsonArray, tableConfig, mappings);
-            // Pass transposed array to generateTableBody
-            generateTransposedTable(transposed, tableConfig, mappings, html);
+        if(noHeader){
+            generateTableBodyWithoutHeader(jsonArray, html, isTransposed);
         } else {
-            // Normal table generation
-            ArrayList<String> columnHeaders = generateTableHeader(jsonArray, tableConfig, mappings, html);
-            generateTableBody(jsonArray, tableConfig, mappings, html, columnHeaders);
+            if (isTransposed) {
+                // Transpose logic  
+                LinkedHashMap<String, LinkedHashMap<String, String>> transposed = transposeJsonArray(jsonArray, tableConfig, mappings);
+                // Pass transposed array to generateTableBody
+                generateTransposedTable(transposed, tableConfig, mappings, html);
+            } else {
+                // Normal table generation
+                ArrayList<String> columnHeaders = generateTableHeader(jsonArray, tableConfig, mappings, html);
+                generateTableBody(jsonArray, tableConfig, mappings, html, columnHeaders);
+            }    
         }
-
+    
         html.append("</table>");
         return html.toString();
     }
@@ -126,6 +132,22 @@ public class HtmlTable {
         return sortedColumnHeaders;
     }
 
+    private static void generateTableBodyWithoutHeader(JSONArray jsonArray, StringBuilder html, Boolean isTransposed) throws JSONException {
+        html.append("<tbody>");
+        if(isTransposed){
+            for (int i = 0; i < jsonArray.length(); i++) {
+                html.append("<tr><td>" + jsonArray.get(i) + "</td></tr>");
+            }
+        } else{
+            html.append("<tr>");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                html.append("<td>" + jsonArray.get(i) + "</td>");
+            }
+            html.append("</tr>");
+        }
+        html.append("</tbody>");
+    }
+
     private static void generateTableBody(JSONArray jsonArray, ArrayList<String> tableConfig, LinkedHashMap<String, Map> mappings, StringBuilder html, ArrayList<String> columnHeaders) throws JSONException {
         html.append("<tbody>");
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -142,23 +164,7 @@ public class HtmlTable {
 
                 String toAppend = "";
                 if (value instanceof JSONArray) {
-                    JSONArray array = (JSONArray) value;
-                    StringBuilder arrayString = new StringBuilder();
-
-                    for (int j = 0; j < array.length(); j++) {
-                        Object arrayElement = array.get(j);
-                        if (arrayElement instanceof JSONArray || arrayElement instanceof JSONObject) {
-                            arrayString.append(convertToHtmlTable(fromObject(
-                                    (JSONObject) arrayElement), mappings, tableConfig));
-                        } else {
-                            arrayString.append(arrayElement.toString());
-                        }
-                        if (j < array.length() - 1) {
-                            arrayString.append(", ");
-                        }
-                    }
-
-                    toAppend = arrayString.toString();
+                    toAppend = convertToHtmlTable((JSONArray) value, mappings, tableConfig);
                 } else if (value instanceof JSONObject) {
                     toAppend = convertToHtmlTable(fromObject((JSONObject) value), mappings, tableConfig);
                 } else {
