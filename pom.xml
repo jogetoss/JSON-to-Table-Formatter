@@ -4,7 +4,7 @@
     <groupId>org.joget.marketplace</groupId>
     <artifactId>json-to-table-formatter</artifactId>
     <packaging>bundle</packaging>
-    <version>7.0.1</version>
+    <version>7.0.2</version>
     <name>json-to-table-formatter</name>
     <url>http://www.joget.org</url>
     <build>
@@ -86,7 +86,7 @@
         <dependency>
             <groupId>org.joget</groupId>
             <artifactId>wflow-core</artifactId>
-            <version>7.0-SNAPSHOT</version>
+            <version>8.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>javax.servlet</groupId>

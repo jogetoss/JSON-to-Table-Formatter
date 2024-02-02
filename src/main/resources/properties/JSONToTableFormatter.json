@@ -50,6 +50,17 @@
           "label" : "",
           "value" : "true"
         }]
+      },
+      {
+        "name": "transpose",
+        "label": "Transpose Table",
+        "type": "checkbox",
+        "options": [
+          {
+            "value": "true",
+            "label": ""
+          }
+        ]
       }
     ]
   }
