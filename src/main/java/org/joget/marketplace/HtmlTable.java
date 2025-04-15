@@ -15,6 +15,7 @@ public class HtmlTable {
 
     public static String fromJson(String json, LinkedHashMap<String, Map> mappings, ArrayList<String> tableConfig) throws JSONException {
         try {
+            json = stripHtml(json);
             if (json == null || json.isEmpty()) {
                 throw new RuntimeException("Json can't be null or empty!");
             }
@@ -344,4 +345,13 @@ public class HtmlTable {
 
         return transposedMap;
     }
+
+    public static String stripHtml(String input) {
+        if (input == null) return "";
+        return input
+            .replaceAll("<[^>]*>", "")
+            .replaceAll("[\\n\\r]+", " ")
+            .trim();
+    }
+    
 }
