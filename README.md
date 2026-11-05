@@ -2,6 +2,8 @@
 
 This list formatter plugin turns JSON data into a formatted table.
 
+Set **Display Mode** to **Audit Trail Changes (Before / After)** to show the JSON stored by the Workflow Form Binder with Audit Trail plugin as a Field / Before / After comparison, including grid rows, subforms and file uploads.
+
 ![screenshot](https://github.com/jogetoss/json-to-table-formatter/assets/70784722/eb5b626c-e64c-438e-bd4d-43762f8145b4)
 
 

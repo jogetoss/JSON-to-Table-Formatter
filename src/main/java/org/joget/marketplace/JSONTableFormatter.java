@@ -6,11 +6,15 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.WeakHashMap;
+import java.util.Collections;
 
 import org.joget.apps.app.service.AppUtil;
 import org.joget.apps.datalist.model.DataList;
 import org.joget.apps.datalist.model.DataListColumn;
 import org.joget.apps.datalist.model.DataListColumnFormatDefault;
+import org.joget.apps.datalist.service.DataListService;
+import org.displaytag.tags.TableTagParameters;
 
 import org.joget.apps.app.service.AppPluginUtil;
 import org.joget.commons.util.LogUtil;
@@ -18,8 +22,41 @@ import org.joget.commons.util.LogUtil;
 public class JSONTableFormatter extends DataListColumnFormatDefault {
     private static final String MESSAGE_PATH = "messages/JSONToTableFormatter";
 
+    //datalists that already received the audit trail CSS
+    private static final Map<DataList, Boolean> STYLED = Collections.synchronizedMap(new WeakHashMap<DataList, Boolean>());
+
     @Override
     public String format(DataList dataList, DataListColumn column, Object row, Object value) {
+        if ("auditTrail".equals(getPropertyString("displayMode"))) {
+            //the value passed in is already HTML escaped, so read the raw JSON from the row
+            Object raw = DataListService.evaluateColumnValueFromRow(row, column.getName());
+            String json = (raw != null) ? raw.toString() : null;
+            AuditTrailTable auditTable = new AuditTrailTable(getClassName(),
+                    "true".equalsIgnoreCase(getPropertyString("showFieldId")),
+                    "true".equalsIgnoreCase(getPropertyString("expandByDefault")));
+
+            String result;
+            if ("1".equals(dataList.getDataListParamString(TableTagParameters.PARAMETER_EXPORTING))) {
+                result = auditTable.renderText(json);
+            } else {
+                String author = null;
+                Object date = null;
+                if ("true".equalsIgnoreCase(getPropertyString("showAuthor"))) {
+                    Object name = DataListService.evaluateColumnValueFromRow(row, "createdByName");
+                    if (name == null || name.toString().isEmpty()) {
+                        name = DataListService.evaluateColumnValueFromRow(row, "createdBy");
+                    }
+                    author = (name != null) ? name.toString() : null;
+                    //already formatted with the app's date format and the user's time zone
+                    date = DataListService.evaluateColumnValueFromRow(row, "dateCreated");
+                }
+                result = auditTable.render(json, author, date, STYLED.put(dataList, Boolean.TRUE) == null);
+            }
+            if (result != null) {
+                return result;
+            }
+        }
+
         String showUnmapped = getPropertyString("showUnmappedFields");
         String headerFontColor = getPropertyString("headerFontColor");
         String headerBgColor = getPropertyString("headerBgColor");

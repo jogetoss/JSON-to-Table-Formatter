@@ -2,7 +2,55 @@
   {
     "title": "@@datalist.JSONToTableFormatter.config@@",
     "properties": [ 
-     
+      {
+        "name" : "displayMode",
+        "label" : "@@datalist.JSONToTableFormatter.displayMode@@",
+        "description" : "@@datalist.JSONToTableFormatter.displayModeDesc@@",
+        "type" : "selectbox",
+        "value" : "",
+        "options" : [
+          {"value" : "", "label" : "@@datalist.JSONToTableFormatter.displayMode.table@@"},
+          {"value" : "auditTrail", "label" : "@@datalist.JSONToTableFormatter.displayMode.auditTrail@@"}
+        ]
+      },
+      {
+        "name" : "showFieldId",
+        "label" : "@@datalist.JSONToTableFormatter.showFieldId@@",
+        "type" : "checkbox",
+        "control_field" : "displayMode",
+        "control_value" : "auditTrail",
+        "control_use_regex" : "false",
+        "options" : [{
+          "label" : "",
+          "value" : "true"
+        }]
+      },
+      {
+        "name" : "expandByDefault",
+        "label" : "@@datalist.JSONToTableFormatter.expandByDefault@@",
+        "type" : "checkbox",
+        "control_field" : "displayMode",
+        "control_value" : "auditTrail",
+        "control_use_regex" : "false",
+        "options" : [{
+          "label" : "",
+          "value" : "true"
+        }]
+      },
+      {
+        "name" : "showAuthor",
+        "label" : "@@datalist.JSONToTableFormatter.showAuthor@@",
+        "description" : "@@datalist.JSONToTableFormatter.showAuthorDesc@@",
+        "type" : "checkbox",
+        "value" : "true",
+        "control_field" : "displayMode",
+        "control_value" : "auditTrail",
+        "control_use_regex" : "false",
+        "options" : [{
+          "label" : "",
+          "value" : "true"
+        }]
+      },
       {
         "name" : "headerFontColor",
         "label" : "@@datalist.JSONToTableFormatter.headerFontColor@@",
